@@ -1,18 +1,23 @@
 package com.javacore.multithreading.entity;
 
-import com.javacore.multithreading.wirehouse.Warehouse;
+import com.javacore.multithreading.warehouse.Warehouse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 public class Library {
 
+    private final List<LibraryWoman> libraryWomen = new ArrayList<>();
     private final Semaphore semaphore;
-
     private final Warehouse warehouse;
 
-    public Library(Warehouse warehouse) {
+    public Library(int womenAmount, Warehouse warehouse) {
         this.warehouse = warehouse;
-        semaphore = new Semaphore(1);
+        for (int i = 0; i < womenAmount; i++) {
+            libraryWomen.add(new LibraryWoman(i));
+        }
+        semaphore = new Semaphore(womenAmount);
     }
 
     public Semaphore getSemaphore() {
