@@ -1,7 +1,7 @@
 package com.javacore.multithreading;
 
+import com.javacore.multithreading.entity.BookReader;
 import com.javacore.multithreading.entity.LibraryStorage;
-import com.javacore.multithreading.entity.Reader;
 import com.javacore.multithreading.exception.LibraryException;
 import com.javacore.multithreading.parser.FileParser;
 import com.javacore.multithreading.owner.LibraryOwner;
@@ -61,8 +61,8 @@ public class Main {
                 requestedBooks.add(Integer.parseInt(data[j]));
             }
 
-            Reader reader = new Reader(id, requestedBooks, library);
-            executor.submit(reader);
+            BookReader bookReader = new BookReader(id, requestedBooks, library);
+            executor.submit(bookReader);
         }
         executor.shutdown();
 
