@@ -1,12 +1,9 @@
 package com.javacore.multithreading;
 
 import com.javacore.multithreading.entity.BookReader;
-import com.javacore.multithreading.entity.LibraryStorage;
 import com.javacore.multithreading.exception.LibraryException;
-import com.javacore.multithreading.parser.FileParser;
-import com.javacore.multithreading.owner.LibraryOwner;
-import com.javacore.multithreading.warehouse.Warehouse;
-import com.javacore.multithreading.warehouse.WarehouseImpl;
+import com.javacore.multithreading.parser.LibraryParser;
+import com.javacore.multithreading.storage.LibraryStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,59 +16,37 @@ public class Main {
     public static void main(String[] args)
             throws LibraryException {
 
-        List<String> lines =
-                FileParser.read(
+        List<String> lines = LibraryParser.read(
                         "src/main/resources/config.txt"
                 );
 
-        String[] libraryData =
-                lines.get(0).split(" ");
-
-        int librarians =
-                Integer.parseInt(
-                        libraryData[0]
-                );
-
-        int booksAmount =
-                Integer.parseInt(
-                        libraryData[1]
-                );
-
-        Warehouse warehouse =
-                new WarehouseImpl(
-                        booksAmount
-                );
-
-        LibraryStorage library =
-                new LibraryStorage(
-                        librarians,
-                        warehouse
-                );
-
-        LibraryOwner.getInstance().setLibrary(library);
-
-        ExecutorService executor = Executors.newFixedThreadPool(lines.size() - 1);
+        int booksAmount = Integer.parseInt(lines.get(0));
+        LibraryStorage.getInstance().init(booksAmount);
+        int readersAmount = lines.size() - 1;
+        ExecutorService executor = Executors.newFixedThreadPool(readersAmount);
 
         for (int i = 1; i < lines.size(); i++) {
-
             String[] data = lines.get(i).split(" ");
             int id = Integer.parseInt(data[0]);
-            List<Integer> requestedBooks = new ArrayList<>();
-            for (int j = 1; j < data.length; j++) {
-                requestedBooks.add(Integer.parseInt(data[j]));
-            }
 
-            BookReader bookReader = new BookReader(id, requestedBooks, library);
-            executor.submit(bookReader);
+            List<Integer> requested = new ArrayList<>();
+
+            for (int j = 1; j < data.length; j++) {
+                requested.add(Integer.parseInt(data[j]));
+            }
+            executor.submit(new BookReader(id, requested));
         }
+
         executor.shutdown();
 
         try {
-            executor.awaitTermination(1, TimeUnit.MINUTES);
-
+            executor.awaitTermination(
+                    1,
+                    TimeUnit.MINUTES
+            );
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new LibraryException("Main thread interrupted");
+            throw new LibraryException("Main interrupted");
         }
     }
 }
