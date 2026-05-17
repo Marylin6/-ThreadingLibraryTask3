@@ -1,11 +1,11 @@
 package com.javacore.multithreading.owner;
 
-import com.javacore.multithreading.entity.Library;
+import com.javacore.multithreading.entity.LibraryStorage;
 
 public class LibraryOwner {
 
     private static final LibraryOwner INSTANCE = new LibraryOwner();
-    private Library library;
+    private LibraryStorage library;
 
     private LibraryOwner() {
     }
@@ -14,11 +14,11 @@ public class LibraryOwner {
         return INSTANCE;
     }
 
-    public Library getLibrary() {
+    public LibraryStorage getLibrary() {
         return library;
     }
 
-    public void setLibrary(Library library) {
+    public void setLibrary(LibraryStorage library) {
         this.library = library;
     }
 }

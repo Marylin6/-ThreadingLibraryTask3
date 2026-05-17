@@ -1,6 +1,6 @@
 package com.javacore.multithreading.warehouse;
 
-import com.javacore.multithreading.book.Book;
+import com.javacore.multithreading.entity.Book;
 import com.javacore.multithreading.book.impl.AvailableBookState;
 import com.javacore.multithreading.book.impl.TakenBookState;
 import org.apache.logging.log4j.LogManager;

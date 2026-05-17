@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Reader implements Runnable {
@@ -19,13 +18,13 @@ public class Reader implements Runnable {
 
     private final List<Integer> requestedBooks;
 
-    private final Library library;
+    private final LibraryStorage library;
 
     private ReaderState state;
 
     public Reader(int id,
                   List<Integer> requestedBooks,
-                  Library library) {
+                  LibraryStorage library) {
 
         this.id = id;
         this.requestedBooks = requestedBooks;

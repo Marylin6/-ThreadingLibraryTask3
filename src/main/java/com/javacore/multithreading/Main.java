@@ -1,6 +1,6 @@
 package com.javacore.multithreading;
 
-import com.javacore.multithreading.entity.Library;
+import com.javacore.multithreading.entity.LibraryStorage;
 import com.javacore.multithreading.entity.Reader;
 import com.javacore.multithreading.exception.LibraryException;
 import com.javacore.multithreading.parser.FileParser;
@@ -42,8 +42,8 @@ public class Main {
                         booksAmount
                 );
 
-        Library library =
-                new Library(
+        LibraryStorage library =
+                new LibraryStorage(
                         librarians,
                         warehouse
                 );
@@ -55,18 +55,13 @@ public class Main {
         for (int i = 1; i < lines.size(); i++) {
 
             String[] data = lines.get(i).split(" ");
-
             int id = Integer.parseInt(data[0]);
-
-            List<Integer> requestedBooks =
-                    new ArrayList<>();
-
+            List<Integer> requestedBooks = new ArrayList<>();
             for (int j = 1; j < data.length; j++) {
                 requestedBooks.add(Integer.parseInt(data[j]));
             }
 
             Reader reader = new Reader(id, requestedBooks, library);
-
             executor.submit(reader);
         }
         executor.shutdown();
